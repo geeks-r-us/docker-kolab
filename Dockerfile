@@ -10,13 +10,13 @@ VOLUME ["/data", "/config", "/spool", "/log"]
 RUN yum -y update \
  && yum -y install epel-release \
  && yum -y install http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm \
- && curl -o /etc/yum.repos.d/Kolab:16.repo  http://obs.kolabsys.com/repositories/Kolab:/16/CentOS_7/Kolab:16.repo \
+ && curl -o /etc/yum.repos.d/Kolab:winterfell.repo  http://obs.kolabsys.com/repositories/Kolab:/Winterfell/CentOS_7/Kolab:Winterfell.repo \
 # Configure keys and priority
  && gpg --keyserver pool.sks-keyservers.net --recv-key 0x352c64e5 \
  && gpg --export --armor epel@fedoraproject.org > epel.asc \
  && rpm --import epel.asc \
  && rm -f epel.asc \
- && gpg --keyserver pool.sks-keyservers.net --recv-key 0x446D5A45 \
+ && gpg --keyserver pool.sks-keyservers.net --recv-key 0x830C2BCF446D5A45 \
  && gpg --export --armor devel@lists.kolab.org > devel.asc \
  && rpm --import devel.asc \
  && rm -f devel.asc \
@@ -30,8 +30,8 @@ RUN yum -y install expect vim crudini fail2ban php-fpm opendkim nginx mod_ssl an
  && systemctl disable firewalld.service
 
 # Install kolab
-RUN yum -y install kolab manticore mongodb-server \
- && echo "LC_ALL=C" >> /etc/sysconfig/mongod \
+RUN yum --nogpgcheck -y install kolab manticore mongodb-server 
+RUN echo "LC_ALL=C" >> /etc/sysconfig/mongod \
  && sed 's/^#smallfiles/smallfiles/' /etc/mongod.conf
 
 # fix guam for cyrus-imapd waiting
